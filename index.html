@@ -251,6 +251,16 @@
             padding: 20px;
         }
 
+        /* 确保SVG图表充分利用空间 */
+        #preview svg {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            min-width: 400px;
+            min-height: 300px;
+        }
+
         /* 状态样式 */
         .loading {
             display: flex;
@@ -269,6 +279,104 @@
             border-left: 4px solid #ff6b6b;
             font-family: monospace;
             white-space: pre-wrap;
+        }
+
+        /* 关于我们弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            color: white;
+        }
+
+        .modal-header {
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #64ffda;
+        }
+
+        .modal-body {
+            padding: 30px;
+            line-height: 1.8;
+        }
+
+        .modal-body p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .contact-info h4 {
+            margin: 0 0 15px 0;
+            color: #64ffda;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: #64ffda;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
         }
 
         /* 响应式设计 */
@@ -311,13 +419,13 @@
     <!-- 顶部导航 -->
     <header class="header">
         <a href="/" class="logo">
-            📊 MMChart <span class="subtitle">- Mermaid在线编辑</span>
+            📊 MMChart <span class="subtitle">- <strong>Mermaid在线编辑</strong></span>
         </a>
         <nav class="nav-links">
-            <a href="#tutorials">教程</a>
+            <!-- <a href="#tutorials">教程</a>
             <a href="#templates">模板</a>
-            <a href="#examples">示例</a>
-            <a href="#about">关于</a>
+            <a href="#examples">示例</a> -->
+            <a href="#about" onclick="showAbout()">关于我们</a>
         </nav>
     </header>
 
@@ -374,7 +482,53 @@ graph TD
         </div>
     </div>
 
+    <!-- 关于我们弹窗 -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAbout()">&times;</span>
+            <div class="modal-header">
+                <h2>📊 关于MMChart</h2>
+            </div>
+            <div class="modal-body">
+                <p>MMChart是专为开发者和文档编写者设计的在线Mermaid图表编辑器。</p>
+                
+                <p>我们相信，图表创作应该像写代码一样简单、精确、可维护。通过MMChart，您可以用简洁的文本语法快速创建各种专业图表，享受实时预览和一键导出的便捷体验。</p>
+                
+                <p>让复杂的想法变成清晰的图表，让沟通变得更高效。</p>
+                
+                <div class="contact-info">
+                    <h4>📧 联系我们</h4>
+                    <div class="contact-item">
+                        <span>📮</span>
+                        <a href="mailto:jiaguoqiang.bruce@gmail.com">jiaguoqiang.bruce@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span>🔗</span>
+                        <span>X号：<a href="https://x.com/BruceJia1" target="_blank">BruceJia1</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // 关于我们弹窗功能
+        function showAbout() {
+            document.getElementById('aboutModal').style.display = 'block';
+        }
+
+        function closeAbout() {
+            document.getElementById('aboutModal').style.display = 'none';
+        }
+
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('aboutModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
         // 初始化Mermaid
         mermaid.initialize({
             startOnLoad: false,
@@ -420,12 +574,26 @@ graph TD
             try {
                 const graphDiv = document.createElement('div');
                 graphDiv.id = 'mermaid-' + Date.now();
+                graphDiv.style.width = '100%';
+                graphDiv.style.height = '100%';
+                graphDiv.style.display = 'flex';
+                graphDiv.style.alignItems = 'center';
+                graphDiv.style.justifyContent = 'center';
                 
                 const { svg } = await mermaid.render(graphDiv.id, code);
                 
                 preview.innerHTML = '';
                 graphDiv.innerHTML = svg;
                 preview.appendChild(graphDiv);
+                
+                // 调整SVG尺寸以更好地填充空间
+                const svgElement = graphDiv.querySelector('svg');
+                if (svgElement) {
+                    svgElement.style.maxWidth = '100%';
+                    svgElement.style.maxHeight = '100%';
+                    svgElement.style.width = 'auto';
+                    svgElement.style.height = 'auto';
+                }
                 
                 console.log('✅ 图表渲染成功');
                 
