@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="MMChart - 专业的在线Mermaid图表编辑器，左右分屏实时预览，支持流程图、序列图、甘特图等。完全免费，无需注册。">
+    <meta name="keywords" content="mermaid编辑器,在线流程图,mermaid实时预览,免费图表工具,代码生成图表">
+    <meta name="author" content="MMChart.com">
+    
+    <!-- Open Graph标签 -->
+    <meta property="og:title" content="MMChart - 在线Mermaid图表编辑器 | 左右分屏实时预览">
+    <meta property="og:description" content="专业的Mermaid编辑器，左边写代码，右边实时预览图表。支持多种图表类型，完全免费使用。">
+    <meta property="og:url" content="https://www.mmchart.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <title>MMChart - 在线Mermaid图表编辑器
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 添加Logo和导航栏 */
+        .header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #64ffda;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            color: #4fd3b8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #64ffda;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 70px);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .editor-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        .panel-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .editor-panel .panel-header {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .panel-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .editor-panel .panel-header h2 {
+            color: #64ffda;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #64ffda, #00bcd4);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #4fd3b8, #0097a7);
+        }
+
+        #editor {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #64ffda;
+            border: none;
+            outline: none;
+            padding: 20px;
+            resize: none;
+            line-height: 1.6;
+        }
+
+        #editor::placeholder {
+            color: rgba(100, 255, 218, 0.5);
+        }
+
+        .preview-container {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .examples {
+            margin-top: 10px;
+        }
+
+        .example-btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .example-btn:hover {
+            background: rgba(100, 255, 218, 0.2);
+        }
+
+        /* 广告位样式 */
+        .ad-banner {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .ad-sidebar {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            width: 300px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .ad-native {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .ad-label {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer a {
+            color: #64ffda;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .editor-panel,
+            .preview-panel {
+                flex: none;
+                height: 50vh;
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 255, 218, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 255, 218, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加头部导航 -->
+    <header class="header">
+        <a href="/" class="logo">
+            📊 MMChart
+        </a>
+        <nav class="nav-links">
+            <a href="#tutorials">教程</a>
+            <a href="#templates">模板</a>
+            <a href="#examples">示例</a>
+            <a href="#about">关于</a>
+        </nav>
+    </header>
+
+    <!-- 顶部横幅广告位 -->
+    <div class="ad-banner">
+        <div>
+            <div class="ad-label">广告</div>
+            横幅广告位 (728x90) - Google AdSense自适应
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="editor-panel">
+            <div class="panel-header">
+                <h2>💻 代码编辑器</h2>
+                <div class="toolbar">
+                    <button class="btn btn-primary" onclick="renderDiagram()">🎨 实时预览</button>
+                    <button class="btn" onclick="clearEditor()">🗑️ 清空代码</button>
+                    <button class="btn" onclick="downloadSVG()">💾 导出图片</button>
+                </div>
+                <div class="examples">
+                    <div style="margin-bottom: 8px; color: rgba(255,255,255,0.7); font-size: 12px;">快速开始：</div>
+                    <button class="btn example-btn" onclick="loadExample('flowchart')">流程图</button>
+                    <button class="btn example-btn" onclick="loadExample('sequence')">序列图</button>
+                    <button class="btn example-btn" onclick="loadExample('gantt')">甘特图</button>
+                    <button class="btn example-btn" onclick="loadExample('pie')">饼图</button>
+                </div>
+                
+                <!-- 侧边栏原生广告 -->
+                <div class="ad-native">
+                    <div class="ad-label">推荐工具</div>
+                    <h4 style="margin: 0 0 8px 0; color: #333;">Notion - 全能工作空间</h4>
+                    <p style="margin: 0; font-size: 12px; color: #666;">文档、数据库、看板，一个工具搞定所有工作流程</p>
+                </div>
+            </div>
+            <textarea id="editor" placeholder="在左边写Mermaid代码，右边实时看到图表效果！
+
+示例 - 简单流程图：
+graph TD
+    A[开始] --> B{判断条件}
+    B -->|是| C[执行操作A]  
+    B -->|否| D[执行操作B]
+    C --> E[结束]
+    D --> E
+
+💡 提示：试试点击上方的示例按钮快速开始"></textarea>
+        </div>
+
+        <div class="preview-panel">
+            <div class="panel-header">
+                <h2>👁️ 实时预览</h2>
+                <div class="toolbar">
+                    <button class="btn" onclick="zoomIn()">🔍 放大</button>
+                    <button class="btn" onclick="zoomOut()">🔍 缩小</button>
+                    <button class="btn" onclick="resetZoom()">↻ 重置大小</button>
+                </div>
+                
+                <!-- 侧边栏广告位 -->
+                <div class="ad-sidebar">
+                    <div>
+                        <div class="ad-label">广告</div>
+                        侧边栏广告位 (300x250)<br>
+                        适合SaaS工具推广
+                    </div>
+                </div>
+            </div>
+            <div class="preview-container">
+                <div id="preview">
+                    <div class="loading">
+                        <h3 style="color: #666; margin-bottom: 10px;">欢迎使用MMChart！</h3>
+                        <p style="color: #888; margin: 0;">👈 在左边输入Mermaid代码</p>
+                        <p style="color: #888; margin: 5px 0 0 0;">或点击示例按钮快速开始</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚信息 -->
+    <div class="footer">
+        Powered by <a href="https://mmchart.com">MMChart.com</a> | 免费在线Mermaid图表编辑器
+    </div>
+
+    <script>
+        // 初始化Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#64ffda',
+                primaryTextColor: '#000',
+                primaryBorderColor: '#00bcd4',
+                lineColor: '#666',
+                sectionBkgColor: '#f5f5f5',
+                altSectionBkgColor: '#e8f5e8',
+                gridColor: '#ddd',
+                cScale0: '#64ffda',
+                cScale1: '#00bcd4',
+                cScale2: '#0097a7'
+            }
+        });
+
+        let currentZoom = 1;
+
+        // 渲染图表
+        async function renderDiagram() {
+            const code = document.getElementById('editor').value.trim();
+            const preview = document.getElementById('preview');
+            
+            if (!code) {
+                preview.innerHTML = '<div class="loading">请输入Mermaid代码</div>';
+                return;
+            }
+
+            preview.innerHTML = '<div class="loading">正在渲染图表...</div>';
+
+            try {
+                // 清除之前的图表
+                preview.innerHTML = '';
+                
+                // 创建一个新的div来渲染图表
+                const graphDiv = document.createElement('div');
+                graphDiv.id = 'mermaid-' + Date.now();
+                preview.appendChild(graphDiv);
+
+                // 渲染图表
+                const { svg } = await mermaid.render(graphDiv.id, code);
+                graphDiv.innerHTML = svg;
+                
+                // 应用当前缩放
+                applyZoom();
+                
+            } catch (error) {
+                console.error('Mermaid渲染错误:', error);
+                preview.innerHTML = `<div class="error-message">渲染错误：\n${error.message}</div>`;
+            }
+        }
+
+        // 清空编辑器
+        function clearEditor() {
+            document.getElementById('editor').value = '';
+            document.getElementById('preview').innerHTML = '<div class="loading">请输入Mermaid代码并点击渲染按钮</div>';
+        }
+
+        // 下载SVG
+        function downloadSVG() {
+            const svgElement = document.querySelector('#preview svg');
+            if (!svgElement) {
+                alert('请先渲染图表');
+                return;
+            }
+
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const blob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mermaid-diagram.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 缩放功能
+        function zoomIn() {
+            currentZoom *= 1.2;
+            applyZoom();
+        }
+
+        function zoomOut() {
+            currentZoom /= 1.2;
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const svgElement = document.querySelector('#preview svg');
+            if (svgElement) {
+                svgElement.style.transform = `scale(${currentZoom})`;
+                svgElement.style.transformOrigin = 'center';
+            }
+        }
+
+        // 示例代码
+        const examples = {
+            flowchart: `graph TD
+    A[开始] --> B{是否满足条件?}
+    B -->|是| C[执行方案A]
+    B -->|否| D[执行方案B]
+    C --> E[记录结果]
+    D --> E
+    E --> F[结束]
+    
+    style A fill:#64ffda
+    style F fill:#ff6b6b`,
+
+            sequence: `sequenceDiagram
+    participant 用户
+    participant 前端
+    participant 后端
+    participant 数据库
+    
+    用户->>前端: 发送请求
+    前端->>后端: 转发请求
+    后端->>数据库: 查询数据
+    数据库-->>后端: 返回数据
+    后端-->>前端: 返回处理结果
+    前端-->>用户: 显示结果`,
+
+            gantt: `gantt
+    title 项目开发时间线
+    dateFormat  YYYY-MM-DD
+    section 需求分析
+    需求调研           :done,    des1, 2024-01-01,2024-01-15
+    需求整理           :done,    des2, 2024-01-16, 10d
+    section 设计阶段
+    UI设计            :active,  des3, 2024-01-20, 20d
+    架构设计           :         des4, after des2, 15d
+    section 开发阶段
+    前端开发           :         des5, 2024-02-01, 30d
+    后端开发           :         des6, 2024-02-01, 25d`,
+
+            pie: `pie title 网站访问来源
+    "搜索引擎" : 45
+    "直接访问" : 25
+    "社交媒体" : 15
+    "邮件营销" : 10
+    "其他" : 5`,
+
+            class: `classDiagram
+    class 用户 {
+        +String 用户名
+        +String 邮箱
+        +String 密码
+        +登录()
+        +注册()
+        +修改密码()
+    }
+    
+    class 订单 {
+        +String 订单号
+        +Date 创建时间
+        +Double 总金额
+        +创建订单()
+        +支付()
+        +取消()
+    }
+    
+    class 商品 {
+        +String 商品名称
+        +Double 价格
+        +Int 库存
+        +添加库存()
+        +减少库存()
+    }
+    
+    用户 ||--o{ 订单 : 拥有
+    订单 ||--o{ 商品 : 包含`
+        };
+
+        // 加载示例
+        function loadExample(type) {
+            if (examples[type]) {
+                document.getElementById('editor').value = examples[type];
+                renderDiagram();
+            }
+        }
+
+        // 自动渲染功能（可选）
+        let renderTimeout;
+        document.getElementById('editor').addEventListener('input', function() {
+            clearTimeout(renderTimeout);
+            renderTimeout = setTimeout(renderDiagram, 1000); // 延迟1秒自动渲染
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        renderDiagram();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        downloadSVG();
+                        break;
+                }
+            }
+        });
+
+        // 初始化时加载流程图示例
+        window.addEventListener('load', function() {
+            loadExample('flowchart');
+        });
+    </script>
+</body>
+</html>
