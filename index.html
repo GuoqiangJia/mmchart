@@ -14,7 +14,7 @@
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <title>MMChart - 在线Mermaid图表编辑器</title>
+    <title>MMChart - 在线Mermaid图表编辑器
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
     <style>
         * {
@@ -224,55 +224,7 @@
             background: rgba(100, 255, 218, 0.2);
         }
 
-        /* 广告位样式 */
-        .ad-banner {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            text-align: center;
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-        }
 
-        .ad-sidebar {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            width: 300px;
-            height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-        }
-
-        .ad-native {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-            backdrop-filter: blur(10px);
-        }
-
-        .ad-label {
-            font-size: 10px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
         .footer {
             position: fixed;
             bottom: 0;
@@ -334,14 +286,6 @@
         </nav>
     </header>
 
-    <!-- 顶部横幅广告位 -->
-    <div class="ad-banner">
-        <div>
-            <div class="ad-label">广告</div>
-            横幅广告位 (728x90) - Google AdSense自适应
-        </div>
-    </div>
-
     <div class="container">
         <div class="editor-panel">
             <div class="panel-header">
@@ -357,13 +301,6 @@
                     <button class="btn example-btn" onclick="loadExample('sequence')">序列图</button>
                     <button class="btn example-btn" onclick="loadExample('gantt')">甘特图</button>
                     <button class="btn example-btn" onclick="loadExample('pie')">饼图</button>
-                </div>
-                
-                <!-- 侧边栏原生广告 -->
-                <div class="ad-native">
-                    <div class="ad-label">推荐工具</div>
-                    <h4 style="margin: 0 0 8px 0; color: #333;">Notion - 全能工作空间</h4>
-                    <p style="margin: 0; font-size: 12px; color: #666;">文档、数据库、看板，一个工具搞定所有工作流程</p>
                 </div>
             </div>
             <textarea id="editor" placeholder="在左边写Mermaid代码，右边实时看到图表效果！
@@ -386,15 +323,6 @@ graph TD
                     <button class="btn" onclick="zoomIn()">🔍 放大</button>
                     <button class="btn" onclick="zoomOut()">🔍 缩小</button>
                     <button class="btn" onclick="resetZoom()">↻ 重置大小</button>
-                </div>
-                
-                <!-- 侧边栏广告位 -->
-                <div class="ad-sidebar">
-                    <div>
-                        <div class="ad-label">广告</div>
-                        侧边栏广告位 (300x250)<br>
-                        适合SaaS工具推广
-                    </div>
                 </div>
             </div>
             <div class="preview-container">
