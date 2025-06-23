@@ -21,6 +21,32 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        html, body {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+
+        /* 禁用所有可能的焦点样式 */
+        *:focus {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 禁用选择高亮 */
+        *::selection {
+            background: transparent !important;
+        }
+
+        *::-moz-selection {
+            background: transparent !important;
         }
 
         body {
@@ -28,6 +54,8 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             height: 100vh;
             overflow: hidden;
+            border: none;
+            outline: none;
         }
 
         /* 顶部导航栏 */
@@ -88,6 +116,8 @@
             display: flex;
             height: calc(100vh - 70px);
             position: relative;
+            border: none;
+            outline: none;
         }
 
         /* 编辑器面板 */
@@ -115,6 +145,8 @@
             cursor: col-resize;
             position: relative;
             transition: background-color 0.2s ease;
+            border: none;
+            outline: none;
         }
 
         .resizer:hover {
@@ -246,9 +278,11 @@
             justify-content: center;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
             overflow: auto;
             padding: 20px;
+            border: none;
+            outline: none;
         }
 
         /* 确保SVG图表充分利用空间 */
@@ -301,9 +335,11 @@
             border-radius: 12px;
             width: 90%;
             max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: none;
             position: relative;
             color: white;
+            border: none;
+            outline: none;
         }
 
         .modal-header {
@@ -467,7 +503,10 @@ graph TD
         <!-- 右侧预览 -->
         <div class="preview-panel" id="previewPanel">
             <div class="preview-actions">
-                <button class="btn btn-primary" onclick="renderDiagram()" title="手动刷新图表">🎨 刷新预览</button>
+                <button class="btn" onclick="renderDiagram()" title="手动刷新图表">🎨 刷新预览</button>
+                <button class="btn" onclick="zoomOut()" title="缩小图表">🔍︎ 缩小</button>
+                <button class="btn" onclick="resetZoom()" title="重置图表大小">↻ 重置</button>
+                <button class="btn" onclick="zoomIn()" title="放大图表">🔍︎ 放大</button>
                 <button class="btn" onclick="downloadSVG()" title="下载SVG格式图片">💾 导出图片</button>
             </div>
             <div class="preview-container">
@@ -549,6 +588,30 @@ graph TD
 
         let currentZoom = 1;
 
+        // 缩放功能
+        function zoomIn() {
+            currentZoom *= 1.2;
+            applyZoom();
+        }
+
+        function zoomOut() {
+            currentZoom /= 1.2;
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const svgElement = document.querySelector('#preview svg');
+            if (svgElement) {
+                svgElement.style.transform = `scale(${currentZoom})`;
+                svgElement.style.transformOrigin = 'center';
+            }
+        }
+
         // 渲染图表
         async function renderDiagram() {
             const code = document.getElementById('editor').value.trim();
@@ -594,6 +657,9 @@ graph TD
                     svgElement.style.width = 'auto';
                     svgElement.style.height = 'auto';
                 }
+                
+                // 应用当前缩放级别
+                applyZoom();
                 
                 console.log('✅ 图表渲染成功');
                 
