@@ -1062,7 +1062,7 @@
                 const newEditorWidth = (mouseX / containerWidth) * 100;
                 const newPreviewWidth = 100 - newEditorWidth;
                 
-                if (newEditorWidth >= 20 && newEditorWidth <= 80) {
+                if (newEditorWidth >= 15 && newEditorWidth <= 50) {
                     editorPanel.style.width = newEditorWidth + '%';
                     previewPanel.style.width = newPreviewWidth + '%';
                 }
@@ -1264,22 +1264,27 @@
 
         // Initialize everything
         window.addEventListener('load', function() {
-            // Detect browser language and set default
-            const browserLang = navigator.language || navigator.userLanguage;
-            const defaultLang = browserLang.startsWith('zh') ? 'zh' : 'en';
-            
+            // Initialize editor first
             initEditor();
             initResizer();
             
-            // Set language and update UI
-            switchLanguage(defaultLang);
-            
-            loadExample('flowchart');
-            
-            // Auto-update status
-            updateStatus();
-            
-            console.log('✅ Enhanced Mermaid Editor initialized!');
+            // Detect browser language and set default - delay to ensure DOM is ready
+            setTimeout(function() {
+                const browserLang = navigator.language || navigator.userLanguage;
+                const defaultLang = browserLang.startsWith('zh') ? 'zh' : 'en';
+                console.log('Detected browser language:', browserLang, '-> Setting to:', defaultLang);
+                
+                // Set language and update UI
+                switchLanguage(defaultLang);
+                
+                // Load example after language is set
+                loadExample('flowchart');
+                
+                // Auto-update status
+                updateStatus();
+                
+                console.log('✅ Enhanced Mermaid Editor initialized with language:', defaultLang);
+            }, 100);
         });
     </script>
 </body>
