@@ -1,0 +1,127 @@
+/* Editor container */
+.editor-container {
+    flex: 1;
+    position: relative;
+    background: #0d1117;
+    overflow: hidden;
+}
+
+/* CodeMirror customization */
+.CodeMirror {
+    height: 100% !important;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+    background: rgba(100, 255, 218, 0.1) !important;
+}
+
+.CodeMirror-line::selection,
+.CodeMirror-line > span::selection,
+.CodeMirror-line > span > span::selection {
+    background: rgba(100, 255, 218, 0.2) !important;
+}
+
+.CodeMirror-gutters {
+    background: rgba(22, 27, 34, 0.8) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+}
+
+.CodeMirror-linenumber {
+    color: rgba(125, 133, 144, 0.8) !important;
+    font-size: 12px !important;
+}
+
+.CodeMirror-activeline-background {
+    background: rgba(100, 255, 218, 0.05) !important;
+}
+
+.CodeMirror-cursor {
+    border-left: 2px solid #64ffda !important;
+}
+
+/* Enhanced scrollbar for CodeMirror */
+.CodeMirror-scrollbar-filler,
+.CodeMirror-gutter-filler {
+    background: rgba(22, 27, 34, 0.8) !important;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar,
+.CodeMirror-hscrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar-track,
+.CodeMirror-hscrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb,
+.CodeMirror-hscrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 255, 218, 0.3);
+    border-radius: 4px;
+}
+
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb:hover,
+.CodeMirror-hscrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 255, 218, 0.5);
+}
+
+/* Custom syntax highlighting for Mermaid */
+.cm-mermaid-keyword {
+    color: #ff7b72 !important;
+    font-weight: bold !important;
+}
+
+.cm-mermaid-diagram-type {
+    color: #79c0ff !important;
+    font-weight: bold !important;
+}
+
+.cm-mermaid-arrow {
+    color: #64ffda !important;
+}
+
+.cm-mermaid-node {
+    color: #a5d6ff !important;
+}
+
+.cm-mermaid-string {
+    color: #ffa657 !important;
+}
+
+.cm-mermaid-bracket {
+    color: #f0f6fc !important;
+}
+
+.cm-mermaid-comment {
+    color: #7d8590 !important;
+    font-style: italic !important;
+}
+
+/* Enhanced autocomplete styling */
+.CodeMirror-hints {
+    background: rgba(22, 27, 34, 0.95) !important;
+    border: 1px solid rgba(100, 255, 218, 0.3) !important;
+    border-radius: 6px !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+.CodeMirror-hint {
+    color: #e6edf3 !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+}
+
+.CodeMirror-hint-active {
+    background: rgba(100, 255, 218, 0.2) !important;
+    color: #64ffda !important;
+}
