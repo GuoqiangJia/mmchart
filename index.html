@@ -2,20 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="MMChart - Professional online Mermaid chart editor with real-time preview, supports flowcharts, sequence diagrams, Gantt charts, etc. Completely free, no registration required.">
-    <meta name="keywords" content="mermaid editor,online flowchart,mermaid real-time preview,free chart tool,code to chart">
-    <meta name="author" content="MMChart.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMChart - Optimized Mermaid Editor</title>
     
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="MMChart - Online Mermaid Chart Editor | Real-time Preview">
-    <meta property="og:description" content="Professional Mermaid editor, write code on the left, preview charts on the right. Supports multiple chart types, completely free to use.">
-    <meta property="og:url" content="https://www.mmchart.com">
-    <meta property="og:type" content="website">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-ocean.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-lighter.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <title>MMChart - Online Mermaid Chart Editor</title>
+    <!-- Mermaid -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/indent-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -33,32 +48,29 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         }
 
-        /* Disable all possible focus styles */
         *:focus {
             outline: none !important;
             border: none !important;
             box-shadow: none !important;
         }
 
-        /* Disable selection highlight */
         *::selection {
-            background: transparent !important;
+            background: rgba(100, 255, 218, 0.3) !important;
         }
 
         *::-moz-selection {
-            background: transparent !important;
+            background: rgba(100, 255, 218, 0.3) !important;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             height: 100vh;
             overflow: hidden;
-            border: none;
-            outline: none;
+            color: #e6edf3;
         }
 
-        /* Top navigation bar */
+        /* Header */
         .header {
             background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(20px);
@@ -67,6 +79,8 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 100;
         }
 
         .logo {
@@ -90,28 +104,12 @@
             margin-left: 8px;
         }
 
-        .logo:hover .subtitle {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
         .nav-links {
             display: flex;
             gap: 20px;
             align-items: center;
         }
 
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #64ffda;
-        }
-
-        /* Language switcher */
         .language-switcher {
             display: flex;
             gap: 5px;
@@ -141,42 +139,266 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #64ffda;
+        }
+
         /* Main container */
         .container {
             display: flex;
             height: calc(100vh - 70px);
             position: relative;
-            border: none;
-            outline: none;
         }
 
         /* Editor panel */
         .editor-panel {
-            width: 35%;
+            width: 50%;
             display: flex;
             flex-direction: column;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Enhanced editor header */
+        .editor-header {
+            background: rgba(22, 27, 34, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+        }
+
+        /* Quick start section */
+        .quick-start {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-start-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: rgba(100, 255, 218, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Editor container */
+        .editor-container {
+            flex: 1;
+            position: relative;
+            background: #0d1117;
+            overflow: hidden;
+        }
+
+        /* CodeMirror customization */
+        .CodeMirror {
+            height: 100% !important;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace !important;
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .CodeMirror-focused .CodeMirror-selected {
+            background: rgba(100, 255, 218, 0.1) !important;
+        }
+
+        .CodeMirror-line::selection,
+        .CodeMirror-line > span::selection,
+        .CodeMirror-line > span > span::selection {
+            background: rgba(100, 255, 218, 0.2) !important;
+        }
+
+        .CodeMirror-gutters {
+            background: rgba(22, 27, 34, 0.8) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .CodeMirror-linenumber {
+            color: rgba(125, 133, 144, 0.8) !important;
+            font-size: 12px !important;
+        }
+
+        .CodeMirror-activeline-background {
+            background: rgba(100, 255, 218, 0.05) !important;
+        }
+
+        .CodeMirror-cursor {
+            border-left: 2px solid #64ffda !important;
+        }
+
+        /* Enhanced scrollbar */
+        .CodeMirror-scrollbar-filler,
+        .CodeMirror-gutter-filler {
+            background: rgba(22, 27, 34, 0.8) !important;
+        }
+
+        .CodeMirror-vscrollbar::-webkit-scrollbar,
+        .CodeMirror-hscrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .CodeMirror-vscrollbar::-webkit-scrollbar-track,
+        .CodeMirror-hscrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .CodeMirror-vscrollbar::-webkit-scrollbar-thumb,
+        .CodeMirror-hscrollbar::-webkit-scrollbar-thumb {
+            background: rgba(100, 255, 218, 0.3);
+            border-radius: 4px;
+        }
+
+        .CodeMirror-vscrollbar::-webkit-scrollbar-thumb:hover,
+        .CodeMirror-hscrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 255, 218, 0.5);
+        }
+
+        /* Status bar */
+        .editor-status {
+            background: rgba(22, 27, 34, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .status-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .status-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-indicator.error {
+            color: #ff6b6b;
+        }
+
+        .status-indicator.success {
+            color: #64ffda;
+        }
+
+        .status-indicator.warning {
+            color: #ffc107;
         }
 
         /* Preview panel */
         .preview-panel {
-            width: 65%;
+            width: 50%;
             display: flex;
             flex-direction: column;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
         }
 
-        /* Draggable divider */
+        .preview-actions {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .preview-actions .btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+
+        .preview-actions .btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .preview-container {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 12px;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        #preview svg {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            min-width: 400px;
+            min-height: 300px;
+        }
+
+        /* Resizer */
         .resizer {
             width: 6px;
             background: rgba(100, 255, 218, 0.3);
             cursor: col-resize;
             position: relative;
             transition: background-color 0.2s ease;
-            border: none;
-            outline: none;
         }
 
         .resizer:hover {
@@ -199,133 +421,7 @@
             border-radius: 1px;
         }
 
-        /* Panel header */
-        .panel-header {
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .quick-start {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .quick-start-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 12px;
-            margin-right: 10px;
-        }
-
-        /* Button styles */
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            background: rgba(100, 255, 218, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(100, 255, 218, 0.3);
-        }
-
-        .btn:hover {
-            background: rgba(100, 255, 218, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #64ffda, #00bcd4);
-            color: #000;
-            font-weight: 600;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #4fd3b8, #0097a7);
-        }
-
-        /* Code editor */
-        #editor {
-            flex: 1;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #64ffda;
-            border: none;
-            outline: none;
-            padding: 20px;
-            resize: none;
-            line-height: 1.6;
-        }
-
-        #editor::placeholder {
-            color: rgba(100, 255, 218, 0.5);
-        }
-
-        /* Preview area button styles */
-        .preview-actions .btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-weight: 500;
-        }
-
-        .preview-actions .btn:hover {
-            background: rgba(0, 0, 0, 0.9);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        .preview-actions {
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .preview-container {
-            flex: 1;
-            padding: 20px;
-            overflow: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent);
-        }
-
-        #preview {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 12px;
-            box-shadow: none;
-            overflow: auto;
-            padding: 20px;
-            border: none;
-            outline: none;
-        }
-
-        /* Ensure SVG charts fully utilize space */
-        #preview svg {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            min-width: 400px;
-            min-height: 300px;
-        }
-
-        /* Status styles */
+        /* Error and loading styles */
         .loading {
             display: flex;
             flex-direction: column;
@@ -345,104 +441,36 @@
             white-space: pre-wrap;
         }
 
-        /* About modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+        /* Custom syntax highlighting for Mermaid */
+        .cm-mermaid-keyword {
+            color: #ff7b72 !important;
+            font-weight: bold !important;
         }
 
-        .modal-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: none;
-            position: relative;
-            color: white;
-            border: none;
-            outline: none;
+        .cm-mermaid-diagram-type {
+            color: #79c0ff !important;
+            font-weight: bold !important;
         }
 
-        .modal-header {
-            padding: 30px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        .cm-mermaid-arrow {
+            color: #64ffda !important;
         }
 
-        .modal-header h2 {
-            margin: 0;
-            font-size: 28px;
-            color: #64ffda;
+        .cm-mermaid-node {
+            color: #a5d6ff !important;
         }
 
-        .modal-body {
-            padding: 30px;
-            line-height: 1.8;
+        .cm-mermaid-string {
+            color: #ffa657 !important;
         }
 
-        .modal-body p {
-            margin-bottom: 20px;
-            font-size: 16px;
+        .cm-mermaid-bracket {
+            color: #f0f6fc !important;
         }
 
-        .contact-info {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .contact-info h4 {
-            margin: 0 0 15px 0;
-            color: #64ffda;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .contact-item a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .contact-item a:hover {
-            color: #64ffda;
-        }
-
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+        .cm-mermaid-comment {
+            color: #7d8590 !important;
+            font-style: italic !important;
         }
 
         /* Responsive design */
@@ -461,28 +489,44 @@
                 display: none;
             }
 
-            .language-switcher {
-                order: -1;
-                margin-right: 10px;
+            .editor-header {
+                padding: 8px 15px;
+            }
+
+            .quick-start {
+                margin-top: 5px;
+                padding-top: 5px;
+            }
+
+            .btn {
+                padding: 3px 6px;
+                font-size: 10px;
             }
         }
 
-        /* Scrollbar styles */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Animation for smooth transitions */
+        .CodeMirror, .preview-container {
+            transition: all 0.3s ease;
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+        /* Enhanced autocomplete styling */
+        .CodeMirror-hints {
+            background: rgba(22, 27, 34, 0.95) !important;
+            border: 1px solid rgba(100, 255, 218, 0.3) !important;
+            border-radius: 6px !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgba(100, 255, 218, 0.3);
-            border-radius: 4px;
+        .CodeMirror-hint {
+            color: #e6edf3 !important;
+            padding: 8px 12px !important;
+            font-size: 13px !important;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(100, 255, 218, 0.5);
+        .CodeMirror-hint-active {
+            background: rgba(100, 255, 218, 0.2) !important;
+            color: #64ffda !important;
         }
     </style>
 </head>
@@ -491,80 +535,86 @@
     <header class="header">
         <a href="/" class="logo">
             📊 MMChart 
-            <span class="subtitle" data-i18n="subtitle">- <strong>Online Mermaid Editor</strong></span>
+            <span class="subtitle">- <strong>Enhanced Mermaid Editor</strong></span>
         </a>
         <nav class="nav-links">
             <div class="language-switcher">
                 <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="switchLanguage('zh')">中文</button>
             </div>
-            <a href="#about" onclick="showAbout()" data-i18n="nav.about">About</a>
+            <a href="#about" onclick="alert('About MMChart - Enhanced with modern code editor!')">About</a>
         </nav>
     </header>
 
     <!-- Main container -->
     <div class="container">
-        <!-- Left editor -->
+        <!-- Enhanced Left Editor -->
         <div class="editor-panel" id="editorPanel">
-            <div class="panel-header">
+            <!-- Enhanced header with quick start -->
+            <div class="editor-header">
+                
+                <!-- Quick start examples -->
                 <div class="quick-start">
-                    <span class="quick-start-label" data-i18n="quick-start">Quick Start:</span>
-                    <button class="btn" onclick="loadExample('flowchart')" data-i18n="examples.flowchart">Flowchart</button>
-                    <button class="btn" onclick="loadExample('sequence')" data-i18n="examples.sequence">Sequence</button>
-                    <button class="btn" onclick="loadExample('gantt')" data-i18n="examples.gantt">Gantt</button>
-                    <button class="btn" onclick="loadExample('pie')" data-i18n="examples.pie">Pie Chart</button>
+                    <span class="quick-start-label">Quick Start:</span>
+                    <button class="btn" onclick="loadExample('flowchart')">🔄 Flowchart</button>
+                    <button class="btn" onclick="loadExample('sequence')">📋 Sequence</button>
+                    <button class="btn" onclick="loadExample('gantt')">📅 Gantt</button>
+                    <button class="btn" onclick="loadExample('pie')">🥧 Pie Chart</button>
+                    <button class="btn" onclick="loadExample('mindmap')">🧠 Mindmap</button>
                 </div>
             </div>
-            <textarea id="editor" data-i18n-placeholder="placeholder"></textarea>
+            
+            <!-- CodeMirror Editor Container -->
+            <div class="editor-container">
+                <textarea id="editor"></textarea>
+            </div>
+            
+            <!-- Status bar -->
+            <div class="editor-status">
+                <div class="status-left">
+                    <div class="status-indicator" id="syntaxStatus">
+                        <span>●</span>
+                        <span id="syntaxText">Ready</span>
+                    </div>
+                    <div class="status-indicator">
+                        <span>Line: <span id="lineNumber">1</span></span>
+                    </div>
+                    <div class="status-indicator">
+                        <span>Col: <span id="colNumber">1</span></span>
+                    </div>
+                </div>
+                <div class="status-right">
+                    <div class="status-indicator">
+                        <span>Lines: <span id="totalLines">1</span></span>
+                    </div>
+                    <div class="status-indicator">
+                        <span>Chars: <span id="charCount">0</span></span>
+                    </div>
+                    <div class="status-indicator" id="themeIndicator">
+                        <span>🌓 Dark</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Divider -->
+        <!-- Resizer -->
         <div class="resizer" id="resizer"></div>
 
-        <!-- Right preview -->
+        <!-- Right preview panel -->
         <div class="preview-panel" id="previewPanel">
             <div class="preview-actions">
-                <button class="btn" onclick="renderDiagram()" data-i18n="preview.refresh" title="Manually refresh chart">🎨 Refresh</button>
-                <button class="btn" onclick="zoomOut()" data-i18n="preview.zoom-out" title="Zoom out chart">🔍︎ Zoom Out</button>
-                <button class="btn" onclick="resetZoom()" data-i18n="preview.reset" title="Reset chart size">↻ Reset</button>
-                <button class="btn" onclick="zoomIn()" data-i18n="preview.zoom-in" title="Zoom in chart">🔍︎ Zoom In</button>
-                <button class="btn" onclick="downloadSVG()" data-i18n="preview.download" title="Download SVG format image">💾 Download</button>
+                <button class="btn" onclick="renderDiagram()" title="Render chart (Ctrl+Enter)">🎨 Render</button>
+                <button class="btn" onclick="zoomOut()" title="Zoom out">🔍︎ Zoom Out</button>
+                <button class="btn" onclick="resetZoom()" title="Reset zoom">↻ Reset</button>
+                <button class="btn" onclick="zoomIn()" title="Zoom in">🔍︎ Zoom In</button>
+                <button class="btn" onclick="downloadSVG()" title="Download SVG">💾 Download</button>
             </div>
             <div class="preview-container">
                 <div id="preview">
                     <div class="loading">
-                        <h3 style="color: #666; margin-bottom: 10px;" data-i18n="preview.welcome">✨ Start Creating Your Chart</h3>
-                        <p style="color: #888; margin: 0;" data-i18n="preview.input-hint">👈 Enter Mermaid code on the left</p>
-                        <p style="color: #888; margin: 5px 0 0 0;" data-i18n="preview.example-hint">Or click example buttons to get started</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- About modal -->
-    <div id="aboutModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAbout()">&times;</span>
-            <div class="modal-header">
-                <h2 data-i18n="modal.title">📊 About MMChart</h2>
-            </div>
-            <div class="modal-body">
-                <p data-i18n="modal.description1">MMChart is an online Mermaid chart editor designed for developers and documentation writers.</p>
-                
-                <p data-i18n="modal.description2">We believe chart creation should be as simple, precise, and maintainable as writing code. With MMChart, you can quickly create various professional charts using concise text syntax, enjoying real-time preview and one-click export convenience.</p>
-                
-                <p data-i18n="modal.description3">Transform complex ideas into clear charts, making communication more efficient.</p>
-                
-                <div class="contact-info">
-                    <h4 data-i18n="modal.contact">📧 Contact Us</h4>
-                    <div class="contact-item">
-                        <span>📮</span>
-                        <a href="mailto:jiaguoqiang.bruce@gmail.com">jiaguoqiang.bruce@gmail.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <span>🔗</span>
-                        <span data-i18n="modal.twitter">X: <a href="https://x.com/BruceJia1" target="_blank">BruceJia1</a></span>
+                        <h3 style="color: #666; margin-bottom: 10px;">✨ Enhanced Mermaid Editor</h3>
+                        <p style="color: #888; margin: 0;">👈 Modern code editor with syntax highlighting</p>
+                        <p style="color: #888; margin: 5px 0 0 0;">Try the example buttons or start typing!</p>
                     </div>
                 </div>
             </div>
@@ -572,243 +622,6 @@
     </div>
 
     <script>
-        // Internationalization
-        const i18n = {
-            en: {
-                subtitle: "- <strong>Online Mermaid Editor</strong>",
-                "nav.about": "About",
-                "quick-start": "Quick Start:",
-                "examples.flowchart": "Flowchart",
-                "examples.sequence": "Sequence",
-                "examples.gantt": "Gantt",
-                "examples.pie": "Pie Chart",
-                "preview.refresh": "🎨 Refresh",
-                "preview.zoom-out": "🔍︎ Zoom Out",
-                "preview.reset": "↻ Reset",
-                "preview.zoom-in": "🔍︎ Zoom In",
-                "preview.download": "💾 Download",
-                "preview.welcome": "✨ Start Creating Your Chart",
-                "preview.input-hint": "👈 Enter Mermaid code on the left",
-                "preview.example-hint": "Or click example buttons to get started",
-                "modal.title": "📊 About MMChart",
-                "modal.description1": "MMChart is an online Mermaid chart editor designed for developers and documentation writers.",
-                "modal.description2": "We believe chart creation should be as simple, precise, and maintainable as writing code. With MMChart, you can quickly create various professional charts using concise text syntax, enjoying real-time preview and one-click export convenience.",
-                "modal.description3": "Transform complex ideas into clear charts, making communication more efficient.",
-                "modal.contact": "📧 Contact Us",
-                "modal.twitter": "X: <a href=\"https://x.com/BruceJia1\" target=\"_blank\">BruceJia1</a>",
-                "placeholder": `💡 Start writing Mermaid code, charts will be displayed on the right in real-time!
-
-📝 Example - Simple Flowchart:
-graph TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Execute A]  
-    B -->|No| D[Execute B]
-    C --> E[End]
-    D --> E
-
-🚀 Features:
-- ⚡ Real-time Preview: Charts display instantly as you type
-- 🎨 Multiple Templates: Click buttons above to get started quickly
-- 💾 One-click Export: Support SVG format download
-- 🔍 Free Scaling: Drag middle divider to adjust layout
-
-✨ Tip: Try clicking the example buttons above, or start writing code directly!`
-            },
-            zh: {
-                subtitle: "- <strong>Mermaid在线编辑</strong>",
-                "nav.about": "关于我们",
-                "quick-start": "快速开始：",
-                "examples.flowchart": "流程图",
-                "examples.sequence": "序列图",
-                "examples.gantt": "甘特图",
-                "examples.pie": "饼图",
-                "preview.refresh": "🎨 刷新预览",
-                "preview.zoom-out": "🔍︎ 缩小",
-                "preview.reset": "↻ 重置",
-                "preview.zoom-in": "🔍︎ 放大",
-                "preview.download": "💾 导出图片",
-                "preview.welcome": "✨ 开始创建你的图表",
-                "preview.input-hint": "👈 在左边输入Mermaid代码",
-                "preview.example-hint": "或点击示例按钮快速开始",
-                "modal.title": "📊 关于MMChart",
-                "modal.description1": "MMChart是专为开发者和文档编写者设计的在线Mermaid图表编辑器。",
-                "modal.description2": "我们相信，图表创作应该像写代码一样简单、精确、可维护。通过MMChart，您可以用简洁的文本语法快速创建各种专业图表，享受实时预览和一键导出的便捷体验。",
-                "modal.description3": "让复杂的想法变成清晰的图表，让沟通变得更高效。",
-                "modal.contact": "📧 联系我们",
-                "modal.twitter": "X号：<a href=\"https://x.com/BruceJia1\" target=\"_blank\">BruceJia1</a>",
-                "placeholder": `💡 开始编写Mermaid代码，右边会实时显示图表！
-
-📝 示例 - 简单流程图：
-graph TD
-    A[开始] --> B{判断条件}
-    B -->|是| C[执行操作A]  
-    B -->|否| D[执行操作B]
-    C --> E[结束]
-    D --> E
-
-🚀 特色功能：
-- ⚡ 实时预览：输入代码即时显示图表
-- 🎨 多种模板：点击上方按钮快速开始
-- 💾 一键导出：支持SVG格式下载
-- 🔍 自由缩放：拖动中间分割线调整布局
-
-✨ 提示：试试点击上方的示例按钮，或者直接开始编写代码！`
-            }
-        };
-
-        let currentLanguage = 'en';
-
-        // Language switching function
-        function switchLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Update language buttons
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
-            
-            // Update document language
-            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-            
-            // Update meta tags
-            const description = lang === 'zh' 
-                ? "MMChart - 专业的在线Mermaid图表编辑器，左右分屏实时预览，支持流程图、序列图、甘特图等。完全免费，无需注册。"
-                : "MMChart - Professional online Mermaid chart editor with real-time preview, supports flowcharts, sequence diagrams, Gantt charts, etc. Completely free, no registration required.";
-            document.querySelector('meta[name="description"]').content = description;
-            
-            const title = lang === 'zh' ? "MMChart - 在线Mermaid图表编辑器" : "MMChart - Online Mermaid Chart Editor";
-            document.title = title;
-            
-            // Update all text elements
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (i18n[lang] && i18n[lang][key]) {
-                    element.innerHTML = i18n[lang][key];
-                }
-            });
-            
-            // Update placeholder
-            const editor = document.getElementById('editor');
-            const placeholderKey = editor.getAttribute('data-i18n-placeholder');
-            if (i18n[lang] && i18n[lang][placeholderKey]) {
-                editor.placeholder = i18n[lang][placeholderKey];
-            }
-            
-            // Update example codes based on language
-            updateExamples(lang);
-        }
-
-        // Update example codes
-        function updateExamples(lang) {
-            if (lang === 'zh') {
-                examples.flowchart = `graph TD
-    A[开始] --> B{是否满足条件?}
-    B -->|是| C[执行方案A]
-    B -->|否| D[执行方案B]
-    C --> E[记录结果]
-    D --> E
-    E --> F[结束]
-    
-    style A fill:#64ffda
-    style F fill:#ff6b6b`;
-
-                examples.sequence = `sequenceDiagram
-    participant 用户
-    participant 前端
-    participant 后端
-    participant 数据库
-    
-    用户->>前端: 发送请求
-    前端->>后端: 转发请求
-    后端->>数据库: 查询数据
-    数据库-->>后端: 返回数据
-    后端-->>前端: 返回处理结果
-    前端-->>用户: 显示结果`;
-
-                examples.gantt = `gantt
-    title 项目开发时间线
-    dateFormat  YYYY-MM-DD
-    section 需求分析
-    需求调研           :done,    des1, 2024-01-01,2024-01-15
-    需求整理           :done,    des2, 2024-01-16, 10d
-    section 设计阶段
-    UI设计            :active,  des3, 2024-01-20, 20d
-    架构设计           :         des4, after des2, 15d
-    section 开发阶段
-    前端开发           :         des5, 2024-02-01, 30d
-    后端开发           :         des6, 2024-02-01, 25d`;
-
-                examples.pie = `pie title 网站访问来源
-    "搜索引擎" : 45
-    "直接访问" : 25
-    "社交媒体" : 15
-    "邮件营销" : 10
-    "其他" : 5`;
-            } else {
-                examples.flowchart = `graph TD
-    A[Start] --> B{Condition Met?}
-    B -->|Yes| C[Execute Plan A]
-    B -->|No| D[Execute Plan B]
-    C --> E[Log Result]
-    D --> E
-    E --> F[End]
-    
-    style A fill:#64ffda
-    style F fill:#ff6b6b`;
-
-                examples.sequence = `sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant Database
-    
-    User->>Frontend: Send Request
-    Frontend->>Backend: Forward Request
-    Backend->>Database: Query Data
-    Database-->>Backend: Return Data
-    Backend-->>Frontend: Return Result
-    Frontend-->>User: Display Result`;
-
-                examples.gantt = `gantt
-    title Project Development Timeline
-    dateFormat  YYYY-MM-DD
-    section Requirements
-    Research           :done,    des1, 2024-01-01,2024-01-15
-    Analysis           :done,    des2, 2024-01-16, 10d
-    section Design
-    UI Design          :active,  des3, 2024-01-20, 20d
-    Architecture       :         des4, after des2, 15d
-    section Development
-    Frontend Dev       :         des5, 2024-02-01, 30d
-    Backend Dev        :         des6, 2024-02-01, 25d`;
-
-                examples.pie = `pie title Website Traffic Sources
-    "Search Engines" : 45
-    "Direct Access" : 25
-    "Social Media" : 15
-    "Email Marketing" : 10
-    "Others" : 5`;
-            }
-        }
-
-        // About modal functions
-        function showAbout() {
-            document.getElementById('aboutModal').style.display = 'block';
-        }
-
-        function closeAbout() {
-            document.getElementById('aboutModal').style.display = 'none';
-        }
-
-        // Click outside modal to close
-        window.onclick = function(event) {
-            const modal = document.getElementById('aboutModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-
         // Initialize Mermaid
         mermaid.initialize({
             startOnLoad: false,
@@ -827,149 +640,14 @@ graph TD
             }
         });
 
+        // Global variables
         let currentZoom = 1;
-
-        // Zoom functions
-        function zoomIn() {
-            currentZoom *= 1.2;
-            applyZoom();
-        }
-
-        function zoomOut() {
-            currentZoom /= 1.2;
-            applyZoom();
-        }
-
-        function resetZoom() {
-            currentZoom = 1;
-            applyZoom();
-        }
-
-        function applyZoom() {
-            const svgElement = document.querySelector('#preview svg');
-            if (svgElement) {
-                svgElement.style.transform = `scale(${currentZoom})`;
-                svgElement.style.transformOrigin = 'center';
-            }
-        }
-
-        // Render diagram
-        async function renderDiagram() {
-            const code = document.getElementById('editor').value.trim();
-            const preview = document.getElementById('preview');
-            
-            if (!code) {
-                preview.innerHTML = `
-                    <div class="loading">
-                        <h3 style="color: #666; margin-bottom: 10px;" data-i18n="preview.welcome">✨ Start Creating Your Chart</h3>
-                        <p style="color: #888; margin: 0;" data-i18n="preview.input-hint">👈 Enter Mermaid code on the left</p>
-                        <p style="color: #888; margin: 5px 0 0 0;" data-i18n="preview.example-hint">Or click example buttons to get started</p>
-                    </div>
-                `;
-                // Re-apply translations
-                preview.querySelectorAll('[data-i18n]').forEach(element => {
-                    const key = element.getAttribute('data-i18n');
-                    if (i18n[currentLanguage] && i18n[currentLanguage][key]) {
-                        element.innerHTML = i18n[currentLanguage][key];
-                    }
-                });
-                return;
-            }
-
-            const loadingText = currentLanguage === 'zh' ? '🎨 正在渲染图表...' : '🎨 Rendering chart...';
-            preview.innerHTML = `
-                <div class="loading">
-                    <div style="color: #64ffda; font-size: 16px;">${loadingText}</div>
-                </div>
-            `;
-
-            try {
-                const graphDiv = document.createElement('div');
-                graphDiv.id = 'mermaid-' + Date.now();
-                graphDiv.style.width = '100%';
-                graphDiv.style.height = '100%';
-                graphDiv.style.display = 'flex';
-                graphDiv.style.alignItems = 'center';
-                graphDiv.style.justifyContent = 'center';
-                
-                const { svg } = await mermaid.render(graphDiv.id, code);
-                
-                preview.innerHTML = '';
-                graphDiv.innerHTML = svg;
-                preview.appendChild(graphDiv);
-                
-                // Adjust SVG size to better fill space
-                const svgElement = graphDiv.querySelector('svg');
-                if (svgElement) {
-                    svgElement.style.maxWidth = '100%';
-                    svgElement.style.maxHeight = '100%';
-                    svgElement.style.width = 'auto';
-                    svgElement.style.height = 'auto';
-                }
-                
-                // Apply current zoom level
-                applyZoom();
-                
-                console.log('✅ Chart rendered successfully');
-                
-            } catch (error) {
-                console.error('❌ Mermaid rendering error:', error);
-                
-                let errorMessage = error.message;
-                if (currentLanguage === 'zh') {
-                    if (errorMessage.includes('Parse error')) {
-                        errorMessage = '语法错误：请检查代码格式是否正确';
-                    } else if (errorMessage.includes('Unknown diagram type')) {
-                        errorMessage = '未知图表类型：请检查图表类型是否正确';
-                    }
-                } else {
-                    if (errorMessage.includes('Parse error')) {
-                        errorMessage = 'Syntax error: Please check if the code format is correct';
-                    } else if (errorMessage.includes('Unknown diagram type')) {
-                        errorMessage = 'Unknown diagram type: Please check if the diagram type is correct';
-                    }
-                }
-                
-                const failedTitle = currentLanguage === 'zh' ? '⚠️ 渲染失败' : '⚠️ Rendering Failed';
-                const detailsTitle = currentLanguage === 'zh' ? '查看详细错误信息' : 'View detailed error information';
-                
-                preview.innerHTML = `
-                    <div class="error-message">
-                        <h4 style="margin: 0 0 10px 0; color: #ff6b6b;">${failedTitle}</h4>
-                        <p style="margin: 0 0 10px 0;">${errorMessage}</p>
-                        <details style="margin-top: 10px;">
-                            <summary style="cursor: pointer; color: #999;">${detailsTitle}</summary>
-                            <pre style="margin-top: 5px; font-size: 12px; color: #666;">${error.stack || error.message}</pre>
-                        </details>
-                    </div>
-                `;
-            }
-        }
-
-        // Download SVG
-        function downloadSVG() {
-            const svgElement = document.querySelector('#preview svg');
-            if (!svgElement) {
-                const alertMessage = currentLanguage === 'zh' ? '请先渲染图表' : 'Please render the chart first';
-                alert(alertMessage);
-                return;
-            }
-
-            const svgData = new XMLSerializer().serializeToString(svgElement);
-            const blob = new Blob([svgData], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'mermaid-diagram.svg';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        let isDarkTheme = true;
+        let editor;
+        let renderTimeout;
 
         // Example codes
-        let examples = {
+        const examples = {
             flowchart: `graph TD
     A[Start] --> B{Condition Met?}
     B -->|Yes| C[Execute Plan A]
@@ -1012,41 +690,353 @@ graph TD
     "Direct Access" : 25
     "Social Media" : 15
     "Email Marketing" : 10
-    "Others" : 5`
+    "Others" : 5`,
+
+            mindmap: `mindmap
+  root((Project))
+    Planning
+      Research
+      Requirements
+      Timeline
+    Design
+      UI/UX
+      Architecture
+      Prototyping
+    Development
+      Frontend
+        React
+        Components
+      Backend
+        API
+        Database
+    Testing
+      Unit Tests
+      Integration
+      User Testing`
         };
 
-        // Load example
+        // Mermaid language mode for CodeMirror
+        CodeMirror.defineMode("mermaid", function() {
+            return {
+                token: function(stream, state) {
+                    // Skip whitespace
+                    if (stream.eatSpace()) return null;
+                    
+                    // Comments
+                    if (stream.match(/%%.*$/)) {
+                        return "comment";
+                    }
+                    
+                    // Diagram types
+                    if (stream.match(/^(graph|flowchart|sequenceDiagram|gantt|pie|gitGraph|erDiagram|journey|mindmap|timeline|quadrantChart|requirementDiagram|c4Context|c4Container|c4Component|c4Dynamic)/)) {
+                        return "keyword";
+                    }
+                    
+                    // Direction keywords
+                    if (stream.match(/^(TD|TB|BT|RL|LR|subgraph|end|participant|actor|note|loop|alt|else|opt|par|and|rect|activate|deactivate)/)) {
+                        return "keyword";
+                    }
+                    
+                    // Arrows and connections
+                    if (stream.match(/-->|->|<->|<--|==|==>|<==|==|\.->|\.-|\-\-|::|:::|---|___/)) {
+                        return "operator";
+                    }
+                    
+                    // Brackets and parentheses
+                    if (stream.match(/[\[\](){}]/)) {
+                        return "bracket";
+                    }
+                    
+                    // Strings in quotes
+                    if (stream.match(/"([^"\\]|\\.)*"/)) {
+                        return "string";
+                    }
+                    
+                    // Node IDs and labels
+                    if (stream.match(/[A-Za-z][A-Za-z0-9_]*/)) {
+                        return "variable";
+                    }
+                    
+                    // Numbers
+                    if (stream.match(/\d+/)) {
+                        return "number";
+                    }
+                    
+                    // Default
+                    stream.next();
+                    return null;
+                }
+            };
+        });
+
+        // Autocomplete hints for Mermaid
+        function getMermaidHints(cm, option) {
+            const cursor = cm.getCursor();
+            const line = cm.getLine(cursor.line);
+            const start = cursor.ch;
+            let end = cursor.ch;
+            
+            // Find word boundaries
+            while (end < line.length && /\w/.test(line.charAt(end))) ++end;
+            while (start && /\w/.test(line.charAt(start - 1))) --start;
+            
+            const word = line.slice(start, end);
+            
+            const keywords = [
+                // Diagram types
+                'graph', 'flowchart', 'sequenceDiagram', 'gantt', 'pie', 'gitGraph', 
+                'erDiagram', 'journey', 'mindmap', 'timeline', 'quadrantChart',
+                'requirementDiagram', 'c4Context', 'c4Container', 'c4Component',
+                
+                // Directions
+                'TD', 'TB', 'BT', 'RL', 'LR',
+                
+                // Keywords
+                'subgraph', 'end', 'participant', 'actor', 'note', 'loop', 'alt', 
+                'else', 'opt', 'par', 'and', 'rect', 'activate', 'deactivate',
+                'title', 'dateFormat', 'section', 'click', 'class', 'classDef',
+                
+                // Common arrows
+                '-->', '->', '<->', '<--', '=>', '==>', '<==', '-.->',
+                
+                // Gantt keywords
+                'done', 'active', 'crit', 'after',
+                
+                // Style keywords
+                'fill', 'stroke', 'stroke-width', 'color', 'style'
+            ];
+            
+            const hints = keywords.filter(k => k.toLowerCase().indexOf(word.toLowerCase()) === 0);
+            
+            return {
+                list: hints,
+                from: CodeMirror.Pos(cursor.line, start),
+                to: CodeMirror.Pos(cursor.line, end)
+            };
+        }
+
+        // Initialize CodeMirror
+        function initEditor() {
+            editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+                mode: 'mermaid',
+                theme: isDarkTheme ? 'material-ocean' : 'material-lighter',
+                lineNumbers: true,
+                lineWrapping: false,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                styleActiveLine: true,
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                extraKeys: {
+                    "Ctrl-Space": "autocomplete",
+                    "Ctrl-Enter": renderDiagram,
+                    "Ctrl-F": "findPersistent",
+                    "Ctrl-H": "replace",
+                    "F11": function(cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function(cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                },
+                hintOptions: {
+                    hint: getMermaidHints,
+                    completeSingle: false
+                },
+                placeholder: "💡 Start writing Mermaid code here...\n\nTry typing 'graph TD' for a flowchart\nOr click the example buttons above!",
+                indentUnit: 4,
+                smartIndent: true,
+                electricChars: false
+            });
+
+            // Event listeners
+            editor.on('change', function() {
+                updateStatus();
+                clearTimeout(renderTimeout);
+                renderTimeout = setTimeout(renderDiagram, 1000);
+            });
+
+            editor.on('cursorActivity', function() {
+                updateCursorPosition();
+            });
+
+            // Focus editor
+            editor.focus();
+        }
+
+        // Update status bar
+        function updateStatus() {
+            const cursor = editor.getCursor();
+            const content = editor.getValue();
+            
+            document.getElementById('lineNumber').textContent = cursor.line + 1;
+            document.getElementById('colNumber').textContent = cursor.ch + 1;
+            document.getElementById('totalLines').textContent = editor.lineCount();
+            document.getElementById('charCount').textContent = content.length;
+            
+            // Syntax validation
+            validateSyntax(content);
+        }
+
+        function updateCursorPosition() {
+            const cursor = editor.getCursor();
+            document.getElementById('lineNumber').textContent = cursor.line + 1;
+            document.getElementById('colNumber').textContent = cursor.ch + 1;
+        }
+
+        // Validate Mermaid syntax (basic)
+        function validateSyntax(content) {
+            const statusEl = document.getElementById('syntaxStatus');
+            const textEl = document.getElementById('syntaxText');
+            
+            if (!content.trim()) {
+                statusEl.className = 'status-indicator';
+                textEl.textContent = 'Ready';
+                return;
+            }
+            
+            // Basic validation
+            const diagramTypes = ['graph', 'flowchart', 'sequenceDiagram', 'gantt', 'pie', 'gitGraph', 'erDiagram', 'journey', 'mindmap', 'timeline'];
+            const hasValidStart = diagramTypes.some(type => content.trim().startsWith(type));
+            
+            if (hasValidStart) {
+                statusEl.className = 'status-indicator success';
+                textEl.textContent = 'Valid';
+            } else {
+                statusEl.className = 'status-indicator warning';
+                textEl.textContent = 'Check syntax';
+            }
+        }
+
+        // Load examples
         function loadExample(type) {
             if (examples[type]) {
-                document.getElementById('editor').value = examples[type];
+                editor.setValue(examples[type]);
                 renderDiagram();
             }
         }
 
-        // Auto render feature
-        let renderTimeout;
-        document.getElementById('editor').addEventListener('input', function() {
-            clearTimeout(renderTimeout);
-            renderTimeout = setTimeout(renderDiagram, 800);
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
-                    case 'Enter':
-                        e.preventDefault();
-                        renderDiagram();
-                        break;
-                    case 's':
-                        e.preventDefault();
-                        downloadSVG();
-                        break;
-                }
+        // Render diagram
+        async function renderDiagram() {
+            const code = editor.getValue().trim();
+            const preview = document.getElementById('preview');
+            
+            if (!code) {
+                preview.innerHTML = `
+                    <div class="loading">
+                        <h3 style="color: #666; margin-bottom: 10px;">✨ Enhanced Mermaid Editor</h3>
+                        <p style="color: #888; margin: 0;">👈 Modern code editor with syntax highlighting</p>
+                        <p style="color: #888; margin: 5px 0 0 0;">Try the example buttons or start typing!</p>
+                    </div>
+                `;
+                return;
             }
-        });
 
-        // Resizer drag functionality
+            preview.innerHTML = `
+                <div class="loading">
+                    <div style="color: #64ffda; font-size: 16px;">🎨 Rendering chart...</div>
+                </div>
+            `;
+
+            try {
+                const graphDiv = document.createElement('div');
+                graphDiv.id = 'mermaid-' + Date.now();
+                graphDiv.style.width = '100%';
+                graphDiv.style.height = '100%';
+                graphDiv.style.display = 'flex';
+                graphDiv.style.alignItems = 'center';
+                graphDiv.style.justifyContent = 'center';
+                
+                const { svg } = await mermaid.render(graphDiv.id, code);
+                
+                preview.innerHTML = '';
+                graphDiv.innerHTML = svg;
+                preview.appendChild(graphDiv);
+                
+                const svgElement = graphDiv.querySelector('svg');
+                if (svgElement) {
+                    svgElement.style.maxWidth = '100%';
+                    svgElement.style.maxHeight = '100%';
+                    svgElement.style.width = 'auto';
+                    svgElement.style.height = 'auto';
+                }
+                
+                applyZoom();
+                
+                // Update syntax status
+                const statusEl = document.getElementById('syntaxStatus');
+                const textEl = document.getElementById('syntaxText');
+                statusEl.className = 'status-indicator success';
+                textEl.textContent = 'Rendered ✓';
+                
+            } catch (error) {
+                console.error('Mermaid rendering error:', error);
+                
+                preview.innerHTML = `
+                    <div class="error-message">
+                        <h4 style="margin: 0 0 10px 0; color: #ff6b6b;">⚠️ Rendering Failed</h4>
+                        <p style="margin: 0 0 10px 0;">${error.message}</p>
+                        <details style="margin-top: 10px;">
+                            <summary style="cursor: pointer; color: #999;">View detailed error</summary>
+                            <pre style="margin-top: 5px; font-size: 12px; color: #666;">${error.stack || error.message}</pre>
+                        </details>
+                    </div>
+                `;
+                
+                // Update syntax status
+                const statusEl = document.getElementById('syntaxStatus');
+                const textEl = document.getElementById('syntaxText');
+                statusEl.className = 'status-indicator error';
+                textEl.textContent = 'Error';
+            }
+        }
+
+        // Zoom functions
+        function zoomIn() {
+            currentZoom *= 1.2;
+            applyZoom();
+        }
+
+        function zoomOut() {
+            currentZoom /= 1.2;
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const svgElement = document.querySelector('#preview svg');
+            if (svgElement) {
+                svgElement.style.transform = `scale(${currentZoom})`;
+                svgElement.style.transformOrigin = 'center';
+            }
+        }
+
+        // Download SVG
+        function downloadSVG() {
+            const svgElement = document.querySelector('#preview svg');
+            if (!svgElement) {
+                alert('Please render the chart first');
+                return;
+            }
+
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const blob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mermaid-diagram.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Resizer functionality
         function initResizer() {
             const resizer = document.getElementById('resizer');
             const editorPanel = document.getElementById('editorPanel');
@@ -1066,7 +1056,7 @@ graph TD
                 if (!isResizing) return;
                 
                 const containerRect = container.getBoundingClientRect();
-                const containerWidth = containerRect.width - 6; // Subtract resizer width
+                const containerWidth = containerRect.width - 6;
                 const mouseX = e.clientX - containerRect.left;
                 
                 const newEditorWidth = (mouseX / containerWidth) * 100;
@@ -1086,25 +1076,29 @@ graph TD
                 }
             });
             
-            // Double click to reset
             resizer.addEventListener('dblclick', function() {
-                editorPanel.style.width = '35%';
-                previewPanel.style.width = '65%';
+                editorPanel.style.width = '50%';
+                previewPanel.style.width = '50%';
             });
         }
 
-        // Detect browser language and set default
-        function detectLanguage() {
-            const browserLang = navigator.language || navigator.userLanguage;
-            const defaultLang = browserLang.startsWith('zh') ? 'zh' : 'en';
-            switchLanguage(defaultLang);
+        // Language switching (simplified for demo)
+        function switchLanguage(lang) {
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
         }
 
-        // Initialize
+        // Initialize everything
         window.addEventListener('load', function() {
-            detectLanguage();
-            loadExample('flowchart');
+            initEditor();
             initResizer();
+            loadExample('flowchart');
+            
+            // Auto-update status
+            updateStatus();
+            
+            console.log('✅ Enhanced Mermaid Editor initialized!');
         });
     </script>
 </body>
