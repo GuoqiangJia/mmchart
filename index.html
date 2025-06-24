@@ -542,7 +542,7 @@
                 <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="switchLanguage('zh')">中文</button>
             </div>
-            <a href="#about" onclick="alert('About MMChart - Enhanced with modern code editor!')">About</a>
+            <a href="#about" onclick="showAbout()">About</a>
         </nav>
     </header>
 
@@ -1089,10 +1089,191 @@
             document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
         }
 
+        // About modal functionality
+        function showAbout() {
+            // Create modal if it doesn't exist
+            let modal = document.getElementById('aboutModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'aboutModal';
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAbout()">&times;</span>
+                        <div class="modal-header">
+                            <h2>📊 About MMChart</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>MMChart is an enhanced online Mermaid chart editor designed for developers and documentation writers.</p>
+                            <p>Features:</p>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>✨ Modern code editor with syntax highlighting</li>
+                                <li>🎨 Real-time preview as you type</li>
+                                <li>🔍 Smart autocomplete for Mermaid syntax</li>
+                                <li>📊 Support for multiple chart types</li>
+                                <li>💾 One-click SVG export</li>
+                                <li>🌓 Dark/Light theme support</li>
+                            </ul>
+                            <p>Transform complex ideas into clear charts, making communication more efficient.</p>
+                            <div class="contact-info">
+                                <h4>📧 Contact Us</h4>
+                                <div class="contact-item">
+                                    <span>📮</span>
+                                    <a href="mailto:contact@mmchart.com">contact@mmchart.com</a>
+                                </div>
+                                <div class="contact-item">
+                                    <span>🌐</span>
+                                    <span>Website: <a href="https://www.mmchart.com" target="_blank">www.mmchart.com</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                // Add modal styles
+                if (!document.getElementById('modalStyles')) {
+                    const styles = document.createElement('style');
+                    styles.id = 'modalStyles';
+                    styles.textContent = `
+                        .modal {
+                            display: none;
+                            position: fixed;
+                            z-index: 1000;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0, 0, 0, 0.8);
+                            backdrop-filter: blur(5px);
+                        }
+                        
+                        .modal-content {
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            margin: 5% auto;
+                            padding: 0;
+                            border-radius: 12px;
+                            width: 90%;
+                            max-width: 600px;
+                            position: relative;
+                            color: white;
+                        }
+                        
+                        .modal-header {
+                            padding: 30px;
+                            text-align: center;
+                            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                        }
+                        
+                        .modal-header h2 {
+                            margin: 0;
+                            font-size: 28px;
+                            color: #64ffda;
+                        }
+                        
+                        .modal-body {
+                            padding: 30px;
+                            line-height: 1.8;
+                        }
+                        
+                        .modal-body p {
+                            margin-bottom: 20px;
+                            font-size: 16px;
+                        }
+                        
+                        .modal-body ul {
+                            color: rgba(255, 255, 255, 0.9);
+                        }
+                        
+                        .modal-body li {
+                            margin-bottom: 8px;
+                        }
+                        
+                        .contact-info {
+                            background: rgba(255, 255, 255, 0.1);
+                            padding: 20px;
+                            border-radius: 8px;
+                            margin-top: 20px;
+                        }
+                        
+                        .contact-info h4 {
+                            margin: 0 0 15px 0;
+                            color: #64ffda;
+                        }
+                        
+                        .contact-item {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            margin-bottom: 10px;
+                            font-size: 14px;
+                        }
+                        
+                        .contact-item a {
+                            color: white;
+                            text-decoration: none;
+                        }
+                        
+                        .contact-item a:hover {
+                            color: #64ffda;
+                        }
+                        
+                        .close {
+                            position: absolute;
+                            right: 20px;
+                            top: 20px;
+                            color: rgba(255, 255, 255, 0.8);
+                            font-size: 28px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            width: 30px;
+                            height: 30px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 50%;
+                            transition: all 0.3s ease;
+                        }
+                        
+                        .close:hover {
+                            background: rgba(255, 255, 255, 0.2);
+                            color: white;
+                        }
+                    `;
+                    document.head.appendChild(styles);
+                }
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeAbout() {
+            const modal = document.getElementById('aboutModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Click outside modal to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('aboutModal');
+            if (modal && event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
         // Initialize everything
         window.addEventListener('load', function() {
+            // Detect browser language and set default
+            const browserLang = navigator.language || navigator.userLanguage;
+            const defaultLang = browserLang.startsWith('zh') ? 'zh' : 'en';
+            
             initEditor();
             initResizer();
+            
+            // Set language and update UI
+            switchLanguage(defaultLang);
+            
             loadExample('flowchart');
             
             // Auto-update status
