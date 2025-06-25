@@ -1,6 +1,6 @@
 const zh = {
     header: {
-        title: "增强型Mermaid编辑器",
+        title: "在线Mermaid编辑器",
         about: "关于"
     },
     about: {

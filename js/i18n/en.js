@@ -1,6 +1,6 @@
 const en = {
     header: {
-        title: "Enhanced Mermaid Editor",
+        title: "Online Mermaid Editor",
         about: "About"
     },
     about: {
