@@ -132,6 +132,12 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+.modal-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .modal-header h2 {
     color: #3dd795;
     margin: 0;
