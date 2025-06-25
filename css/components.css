@@ -149,6 +149,8 @@
 }
 
 .modal-body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+    /* 你可以根据页面主标题的实际字体栈进行调整 */
     padding: 20px;
     color: #e6edf3;
     font-size: 0.95rem;
@@ -210,4 +212,7 @@
 
 .close:hover {
     color: #fff;
+}
+.modal-title {
+    font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
 }
