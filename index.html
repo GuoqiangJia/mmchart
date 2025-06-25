@@ -7,6 +7,8 @@
     
     <meta name="description" content="MMChart - Professional online Mermaid chart editor with real-time preview, supports flowcharts, sequence diagrams, Gantt charts, etc. Completely free, no registration required.">
     <meta name="keywords" content="mermaid editor,online flowchart,mermaid real-time preview,free chart tool,code to chart">
+    <meta property="og:title" content="MMChart - Online Mermaid Chart Editor | Real-time Preview">
+    <meta property="og:description" content="Professional Mermaid editor, write code on the left, preview charts on the right. Supports multiple chart types, completely free to use.">
     <meta name="author" content="MMChart.com">
     
     <!-- Open Graph Tags -->
@@ -76,6 +78,11 @@
                     <div class="status-indicator" id="syntaxStatus">
                         <span>●</span>
                         <span id="syntaxText">Ready</span>
+                        <span>Line: <span id="lineNumber">1</span></span>
+                        <span>Col: <span id="colNumber">1</span></span>
+                        <span>Lines: <span id="totalLines">1</span></span>
+                        <span>Chars: <span id="charCount">0</span></span>
+                        <span>🌓 Dark</span>
                     </div>
                     <div class="status-indicator">
                         <span>Line: <span id="lineNumber">1</span></span>
@@ -132,26 +139,17 @@
             <div class="modal-body">
                 <p>MMChart is an enhanced online Mermaid chart editor designed for developers and documentation writers.</p>
                 <p>Features:</p>
-                <ul class="feature-list">
-                    <li>✨ Modern code editor with syntax highlighting</li>
-                    <li>🎨 Real-time preview as you type</li>
-                    <li>🔍 Smart autocomplete for Mermaid syntax</li>
-                    <li>📊 Support for multiple chart types</li>
-                    <li>💾 One-click SVG export</li>
-                    <li>🌓 Dark/Light theme support</li>
-                </ul>
+                <li>✨ Modern code editor with syntax highlighting</li>
+                <li>🎨 Real-time preview as you type</li>
+                <li>🔍 Smart autocomplete for Mermaid syntax</li>
+                <li>📊 Support for multiple chart types</li>
+                <li>💾 One-click SVG export</li>
+                <li>🌓 Dark/Light theme support</li>
                 <p>Transform complex ideas into clear charts, making communication more efficient.</p>
-                <div class="contact-info">
-                    <h3>Contact</h3>
-                    <div class="contact-item">
-                        <span>📧 Email:</span>
-                        <a href="mailto:jiaguoqiang.bruce@gmail.com">jiaguoqiang.bruce@gmail.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <span>🐦 X (Twitter):</span>
-                        <a href="https://twitter.com/BruceJia1" target="_blank">@BruceJia1</a>
-                    </div>
-                </div>
+                <h3>Contact</h3>
+                <span>📧 Email:</span>
+                <span>🐦 X (Twitter):</span>
+                <a href="mailto:jiaguoqiang.bruce@gmail.com">jiaguoqiang.bruce@gmail.com</a>
             </div>
         </div>
     </div>
