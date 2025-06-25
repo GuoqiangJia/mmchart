@@ -139,13 +139,13 @@
     align-items: center;
 }
 .modal-header h2 {
-    color: #3dd795;
+    color: #64ffda; /* 修改为与logo相同的颜色 */
     margin: 0;
     font-size: 1.25rem;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-weight: 900; /* 从700增加到900，使标题更加粗体 */
+    font-weight: 900;
 }
 
 .modal-body {
@@ -175,7 +175,7 @@
 }
 
 .contact-info h3 {
-    color: #3dd795;
+    color: #64ffda; /* 修改为与logo相同的颜色 */
     margin: 0 0 16px 0;
     font-size: 1.1rem;
 }
@@ -192,12 +192,13 @@
 }
 
 .contact-item a {
-    color: #3dd795;
+    color: #64ffda; /* 修改为与logo相同的颜色 */
     text-decoration: none;
 }
 
 .contact-item a:hover {
     text-decoration: underline;
+    color: #4fd3b8; /* 悬停时使用logo悬停的颜色 */
 }
 
 .close {
