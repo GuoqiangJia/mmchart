@@ -122,3 +122,27 @@ if (document.readyState === 'loading') {
 } else {
     initApp();
 }
+
+
+// About modal functionality
+function showAbout() {
+    const modal = document.getElementById('aboutModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+function closeAbout() {
+    const modal = document.getElementById('aboutModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('aboutModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
