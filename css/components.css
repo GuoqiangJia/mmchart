@@ -124,20 +124,12 @@
 
 .modal-content {
     background: #1a1e23;
-    margin: 10% auto;
+    margin: 15% auto;
     padding: 0;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-header h2 {
@@ -147,43 +139,32 @@
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.close {
-    color: #666;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-}
-
-.close:hover {
-    color: #3dd795;
+    font-weight: 700;
 }
 
 .modal-body {
     padding: 20px;
     color: #e6edf3;
     font-size: 0.95rem;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .feature-list {
     list-style: none;
     padding: 0;
-    margin: 15px 0;
+    margin: 12px 0;
 }
 
 .feature-list li {
-    margin: 8px 0;
+    margin: 6px 0;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .contact-info {
-    margin-top: 24px;
-    padding-top: 20px;
+    margin-top: 20px;
+    padding-top: 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
