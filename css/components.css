@@ -145,7 +145,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-weight: 700;
+    font-weight: 900; /* 从700增加到900，使标题更加粗体 */
 }
 
 .modal-body {
@@ -198,4 +198,15 @@
 
 .contact-item a:hover {
     text-decoration: underline;
+}
+
+.close {
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 20px;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: #fff;
 }
