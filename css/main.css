@@ -126,7 +126,7 @@ body {
 
 /* Panels */
 .editor-panel {
-    width: 50%;
+    width: 25%;
     display: flex;
     flex-direction: column;
     background: rgba(13, 17, 23, 0.95);
@@ -135,7 +135,7 @@ body {
 }
 
 .preview-panel {
-    width: 50%;
+    width: 75%;
     display: flex;
     flex-direction: column;
     background: rgba(255, 255, 255, 0.95);
