@@ -40,12 +40,10 @@
             <span class="subtitle">- <strong>Enhanced Mermaid Editor</strong></span>
         </a>
         <nav class="nav-links">
-            <!-- 注释掉语言切换按钮
             <div class="language-switcher">
                 <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
                 <button class="lang-btn" onclick="switchLanguage('zh')">中文</button>
             </div>
-            -->
             <a href="#about" onclick="showAbout()">About</a>
         </nav>
     </header>
@@ -178,5 +176,36 @@
     <script src="js/editor.js"></script>
     <script src="js/mermaid-handler.js"></script>
     <script src="js/app.js"></script>
+    <!-- 语言资源文件 -->
+    <script src="js/i18n/en.js"></script>
+    <script src="js/i18n/zh.js"></script>
+    
+    <script>
+    // 在文档加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化编辑器
+        initEditor();
+        
+        // 其他初始化代码...
+        
+        // 检测浏览器语言并设置默认语言
+        setTimeout(function() {
+            // 首先检查本地存储中是否有用户之前选择的语言
+            const savedLang = localStorage.getItem('preferredLanguage');
+            if (savedLang) {
+                switchLanguage(savedLang);
+                return;
+            }
+            
+            // 否则检测浏览器语言
+            const browserLang = navigator.language || navigator.userLanguage;
+            const defaultLang = browserLang.startsWith('zh') ? 'zh' : 'en';
+            console.log('检测到浏览器语言:', browserLang, '-> 设置为:', defaultLang);
+            
+            // 设置语言并更新UI
+            switchLanguage(defaultLang);
+        }, 100);
+    });
+    </script>
 </body>
 </html>

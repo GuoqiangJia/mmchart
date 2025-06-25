@@ -48,6 +48,8 @@ function initResizer() {
 }
 
 // Language switching (simplified for demo)
+// Language switching (simplified for demo)
+// Language switching
 function switchLanguage(lang) {
     const langBtns = document.querySelectorAll('.lang-btn');
     langBtns.forEach(btn => btn.classList.remove('active'));
@@ -57,7 +59,10 @@ function switchLanguage(lang) {
         targetBtn.classList.add('active');
     }
     
-    // Here you could add actual language switching logic
+    // 实际的语言切换逻辑
+    updateUITexts(lang);
+    document.documentElement.lang = lang;
+    localStorage.setItem('preferredLanguage', lang);
     console.log(`Language switched to: ${lang}`);
 }
 
@@ -145,4 +150,37 @@ window.onclick = function(event) {
     if (event.target === modal) {
         modal.style.display = 'none';
     }
+}
+
+
+// 全局变量存储当前语言的文本
+let texts = {};
+
+// 更新UI文本
+function updateUITexts(lang) {
+    // 加载对应语言的文本
+    if (lang === 'zh') {
+        texts = zh;
+    } else {
+        texts = en;
+    }
+    
+    // 更新标题
+    document.querySelector('.subtitle strong').textContent = texts.header.title;
+    
+    // 更新About链接
+    document.querySelector('.nav-links a[href="#about"]').textContent = texts.header.about;
+    
+    // 更新About模态框内容
+    document.querySelector('.modal-header h2').textContent = texts.about.title;
+    
+    // 更新编辑器占位符
+    if (editor) {
+        editor.setOption('placeholder', texts.editor.placeholder);
+    }
+    
+    // 更新示例标题
+    document.querySelector('.examples-title').textContent = texts.editor.examples;
+    
+    // 更新更多UI元素...
 }
